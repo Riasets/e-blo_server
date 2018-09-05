@@ -21,7 +21,7 @@ module.exports = function(app, db) {
                    res.send("ERROR")
                } else {
                    const token = jwt.sign({id: user._id, isAdmin: user.isAdmin}, secretKey);
-                   res.send({token: token});
+                   res.send({token: token, name: user.name, email: user.email, schedule: user.schedule, isAdmin: user.isAdmin});
                }
            })
     });

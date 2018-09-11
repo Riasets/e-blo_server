@@ -8,17 +8,20 @@ module.exports = function(app, db) {
         users.find()
             .exec((err, users) =>{
                 if (err){
-                    res.send("ERROR")
+                    res.send("ERROR");
                 } else {
                     res.send(users);
                 }
             })
     });
     app.get('/api/login', (req, res) =>{
+        console.log(req.headers);
        users.findOne({email: req.headers['email'], password: req.headers['password']})
            .exec((err, user) =>{
-               if (err){
-                   res.send("ERROR")
+               console.log(err);
+               console.log(user);
+               if (!user){
+                   res.status(404).send({error : "User not found"});
                } else {
                    const token = jwt.sign({id: user._id, isAdmin: user.isAdmin}, secretKey);
                    res.send({token: token, name: user.name, email: user.email, schedule: user.schedule, isAdmin: user.isAdmin});

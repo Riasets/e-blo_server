@@ -3,14 +3,16 @@ const users = mongoose.model('User');
 
 module.exports = function(app, db) {
     app.post('/api/register', (req, res) => {
-        console.log(req.body);
-        users.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            isAdmin: false,
-            schedule: null,
+        if (req.body.email && req.body.password) {
+            users.create({
+                email: req.body.email,
+                password: req.body.password,
+                isAdmin: false,
+                schedule: null,
             })
-        res.send("OK")
+            res.send("OK")
+        } else {
+            res.status(400).send({error: "Bad request"})
+        }
     });
 };

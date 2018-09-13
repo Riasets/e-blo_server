@@ -18,8 +18,6 @@ module.exports = function(app, db) {
         console.log(req.headers);
        users.findOne({email: req.headers['email'], password: req.headers['password']})
            .exec((err, user) =>{
-               console.log(err);
-               console.log(user);
                if (!user){
                    res.status(404).send({error : "User not found"});
                } else {

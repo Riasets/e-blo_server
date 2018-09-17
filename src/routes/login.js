@@ -21,7 +21,7 @@ module.exports = function(app, db) {
                if (!user){
                    res.status(404).send({error : "User not found"});
                } else {
-                   const token = jwt.sign({id: user._id, isAdmin: user.isAdmin}, secretKey);
+                   const token = jwt.sign({id: user._id, isAdmin: user.isAdmin, schedule: user.schedule}, secretKey);
                    res.send({token: token, name: user.name, email: user.email, schedule: user.schedule, isAdmin: user.isAdmin});
                }
            })

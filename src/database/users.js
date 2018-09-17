@@ -5,11 +5,17 @@ let eventSchema = new mongoose.Schema({
     repeat: Number,
     start: Number,
     end: Number,
-    description: String
+    description: String,
+    numberOfLesson: String,
+    day: Number,
+    owner: String,
+    copy: Boolean,
 });
 
-let scheduleSchema = new mongoose.Schema({
-    events : [eventSchema]
+let scheduleUserSchema = new mongoose.Schema({
+    events : [String],
+    owner : String,
+    copy : Boolean,
 });
 
 let userSchema = new mongoose.Schema({
@@ -17,10 +23,12 @@ let userSchema = new mongoose.Schema({
     email: String,
     password: String,
     isAdmin: Boolean,
-    schedule: scheduleSchema,
+    schedule: String,
+    mainSchedule: String,
+    ImportSchedule: String,
 });
 
 mongoose.model('Event', eventSchema, 'events');
 mongoose.model('User', userSchema, 'users');
-mongoose.model('Schedule', scheduleSchema, 'schedules');
+mongoose.model('UserSchedule', scheduleUserSchema, 'schedules');
 

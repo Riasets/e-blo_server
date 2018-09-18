@@ -21,8 +21,15 @@ module.exports = function(app, db) {
                if (!user){
                    res.status(404).send({error : "User not found"});
                } else {
-                   const token = jwt.sign({id: user._id, isAdmin: user.isAdmin, schedule: user.schedule}, secretKey);
-                   res.send({token: token, name: user.name, email: user.email, schedule: user.schedule, isAdmin: user.isAdmin});
+                   schedules.findOne({owner: user._id})
+                       .exec((err, schedule) => {
+                           if (err){
+                               res.status(404).send({error : "Schedule not found"});
+                           } else {
+                               const token = jwt.sign({id: user._id, isAdmin: user.isAdmin, schedule: schedule._id, importSchedule: user.importSchedule, importEvents: user.importEvents}, secretKey);
+                               res.send({token: token, name: user.name, email: user.email, isAdmin: user.isAdmin});
+                           }
+                       })
                }
            })
     });

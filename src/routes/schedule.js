@@ -1,22 +1,20 @@
 const mongoose = require('mongoose');
 const schedules = mongoose.model('UserSchedule');
+const events = mongoose.model('Event');
 const jwt = require('jsonwebtoken');
 const secretKey = require('./env');
 
 module.exports = function (app,db) {
     app.get('api/schedule',(req, res)=>{
         try{
-            var decoded = verify(req.headers.token, secretKey);
-            schedules.findOne({_id: decoded.schedule})
-                .exec((err, schedule) =>{
-                    if (schedule.owner === decoded.id) {
-                        if (!schedule) {
-                            res.status(200).send({schedule: []});
-                        } else {
-                            res.send({schedule: schedule.events});
-                        }
+            let allEvents = [];
+            let decoded = verify(req.headers.token, secretKey);
+            schedules.events.find({$or: [{owner: {$in: [decoded.schedule, decoded.importSchedule]}}, {_id: {$in : decoded.importEvents}}]})
+                .exec((err, events) =>{
+                    if (err) {
+                        res.status(500).send({error: "Database Error", message: err});
                     } else {
-                        res.status(401).send({error: "You haven't permissions for this schedule"});
+                        res.send({events: events, scheduleId: decoded.schedule});
                     }
                 }
             )
@@ -24,32 +22,25 @@ module.exports = function (app,db) {
             res.send(400).send({error: "Wrong token"});
         }
     });
-    app.post('api/schedule', (req, res)=>{
+    app.post('api/event', (req, res)=>{
         try {
-            var decoded = verify(req.headers.token, secretKey);
-            schedules.findOne({_id: decoded.schedule})
-                .exec((err, schedule)=>{
-                    if (schedule.owner === decoded.id) {
-                        if (!schedule) {
-                            res.status(200).send({schedule: []});
-                        } else {
-                            var newEvents = schedule.events;
-                            newEvents.append({start: req.body.start, end: req.body.end, name: req.body.name, description: req.body.description, numberOfLesson: req.body.numberOfLesson, repeat: req.body.repeat, day: req.body.day})
-                            if (req.body.name && req.body.start && req.body.end && req.body.repeat) {
-                                schedules.save({_id : decoded.schedule, events: newEvents})
-                                    .exec((err, answer) => {
-                                        if (error){
-                                            res.status(500).send({error: "Database error", message: error});
-                                        } else {
-                                            res.send({status: "OK"});
-                                        }
-                                    })
-                            }
-                        }
-                    } else {
-                        res.status(401).send({error: "You haven't permissions for this schedule"});
-                    }
+            let decoded = verify(req.headers.token, secretKey);
+            if (req.body.name && req.body.repeat && req.body.start && req.body.end && req.body.day && req.body.copy){
+                schedules.events.create({
+                    name: req.body.name,
+                    repeat: req.body.repeat,
+                    start: req.body.start,
+                    end: req.body.end,
+                    day: req.body.day,
+                    copy: req.body.copy,
+                    numberOfLesson: req.body.numberOfLesson,
+                    description: req.body.description,
+                    owner: decoded.schedule,
                 })
+                res.send({status: "OK"});
+            } else {
+                res.status(400).send({error: "Check entered fields"});
+            }
         } catch (err) {
             res.send(400).send({error: "Wrong token"});
         }

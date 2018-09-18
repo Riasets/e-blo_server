@@ -23,9 +23,9 @@ let userSchema = new mongoose.Schema({
     email: String,
     password: String,
     isAdmin: Boolean,
-    schedule: String,
-    mainSchedule: String,
     ImportSchedule: String,
+    ImportEvents: [String],
+    friends: [String],
 });
 
 mongoose.model('Event', eventSchema, 'events');

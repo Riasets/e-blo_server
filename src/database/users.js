@@ -7,7 +7,7 @@ let eventSchema = new mongoose.Schema({
     end: Number,
     description: String,
     numberOfLesson: String,
-    day: Number,
+    day: Date,
     owner: String,
     copy: Boolean,
 });

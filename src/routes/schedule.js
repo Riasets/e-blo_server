@@ -30,7 +30,7 @@ module.exports = function (app,db) {
                 if (error){
                     res.status(400).send({error: "Wrong token", message: error});
                 }
-                if (req.body.name && req.body.repeat && req.body.start && req.body.end && req.body.day && req.body.copy){
+                if (req.body.name && req.body.repeat && req.body.start && req.body.end && req.body.day && req.body.copy && req.body.isLesson){
                     events.create({
                         name: req.body.name,
                         repeat: req.body.repeat,
@@ -41,6 +41,7 @@ module.exports = function (app,db) {
                         numberOfLesson: req.body.numberOfLesson,
                         description: req.body.description,
                         owner: decoded.schedule,
+                        isLesson: req.body.isLesson,
                     });
                     res.send({status: "OK"});
                 } else {

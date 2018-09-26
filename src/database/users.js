@@ -10,6 +10,7 @@ let eventSchema = new mongoose.Schema({
     day: Date,
     owner: String,
     copy: Boolean,
+    isLesson: Boolean,
 });
 
 let scheduleUserSchema = new mongoose.Schema({

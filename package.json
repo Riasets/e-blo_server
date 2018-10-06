@@ -4,8 +4,8 @@
   "description": "",
   "main": "./src/server.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Riasets/e-blo_server.git"
+    "type": "git",
+    "url": "https://github.com/Riasets/e-blo_server.git"
   },
   "scripts": {
     "test": "test",

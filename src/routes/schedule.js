@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = require('./env');
 
 module.exports = function (app,db) {
-    app.get('/api/schedule',(req, res)=>{
+    app.get('/api/schedule',(req, res) => {
             console.log(req.headers);
             console.log(req.headers.token);
             let allEvents = [];

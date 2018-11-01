@@ -22,4 +22,4 @@ module.exports = function (app, db) {
             res.status(403).send({error: "Token not found"});
         }
     })
-}
+};

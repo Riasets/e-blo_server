@@ -3,6 +3,7 @@ const users = mongoose.model('User');
 const schedules = mongoose.model('UserSchedule');
 const jwt = require('jsonwebtoken');
 const secretKey = require('./env');
+const crypto = require('crypto');
 
 module.exports = function(app, db) {
     app.get('/api/users', (req, res) => {
@@ -16,7 +17,8 @@ module.exports = function(app, db) {
             })
     });
     app.get('/api/login', (req, res) =>{
-       users.findOne({email: req.headers['email'], password: req.headers['password']})
+        console.log(req.headers.password, crypto.createHash('md5').update(req.headers.password).digest('hex'));
+       users.findOne({email: req.headers.email, password: crypto.createHash('md5').update(req.headers.password).digest('hex')})
            .exec((err, user) =>{
                if (!user){
                    res.status(404).send({error : "User not found"});

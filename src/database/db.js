@@ -9,9 +9,9 @@ if (process.platform === 'win32') {
         output: process.stdout
     });
     rl.on("SIGINT", function(){
-        process.emit ('SIGINT');
+        process.emit('SIGINT');
     });
-};
+}
 
 mongoose.connection.on('connected', function(){
     console.log("Mongoose connected to " + dbURI);

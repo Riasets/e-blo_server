@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const users = mongoose.model('User');
 const schedules = mongoose.model('UserSchedule');
+const crypto = require('crypto');
 
 module.exports = function(app, db) {
     app.post('/api/register', (req, res) => {
@@ -12,11 +13,11 @@ module.exports = function(app, db) {
                     } else {
                       const newUser = {
                           email: req.body.email,
-                          password: req.body.password,
+                          password: crypto.createHash('md5').update(req.body.password).digest('hex'),
                           isAdmin: false,
                           importSchedule: null,
                           importEvents: [],
-                      }
+                      };
                       users.create(newUser, (err, user) => {
                           if (err) {
                               res.status(400).send({error: "Database Error", message: err})

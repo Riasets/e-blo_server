@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const users = mongoose.model('User');
 const schedules = mongoose.model('UserSchedule');
+const tokens = mongoose.model('RefreshToken');
 const jwt = require('jsonwebtoken');
 const secretKey = require('./env');
 const crypto = require('crypto');
@@ -17,7 +18,6 @@ module.exports = function(app, db) {
             })
     });
     app.get('/api/login', (req, res) =>{
-        console.log(req.headers.password, crypto.createHash('md5').update(req.headers.password).digest('hex'));
        users.findOne({email: req.headers.email, password: crypto.createHash('md5').update(req.headers.password).digest('hex')})
            .exec((err, user) =>{
                if (!user){
@@ -29,7 +29,16 @@ module.exports = function(app, db) {
                                res.status(404).send({error : "Schedule not found"});
                            } else {
                                const token = jwt.sign({id: user._id, isAdmin: user.isAdmin, schedule: schedule._id, importSchedule: user.importSchedule, importEvents: user.importEvents}, secretKey);
-                               res.send({token: token, name: user.name, email: user.email, isAdmin: user.isAdmin});
+                               const refreshToken = { token: jwt.sign({id: user._id, isAdmin: user.isAdmin, schedule: schedule._id, importSchedule: user.importSchedule, importEvents: user.importEvents}, secretKey, { expiresIn: "2d" })};
+                               tokens.create(refreshToken, (err, refresh) => {
+                                   console.log(err, user);
+                                   if (err) {
+                                       res.status(400).send({error: "Database Error", message: err})
+                                   } else {
+                                       res.send({token: token, refreshToken: refresh.token, name: user.name, email: user.email, isAdmin: user.isAdmin});
+                                   }
+                               });
+
                            }
                        })
                }

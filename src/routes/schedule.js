@@ -6,8 +6,6 @@ const secretKey = require('./env');
 
 module.exports = function (app,db) {
     app.get('/api/schedule',(req, res) => {
-            console.log(req.headers);
-            console.log(req.headers.token);
             let allEvents = [];
             jwt.verify(req.headers.token, secretKey, (error, decoded) => {
                 if (error){

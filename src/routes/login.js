@@ -31,7 +31,6 @@ module.exports = function(app, db) {
                                const token = jwt.sign({id: user._id, isAdmin: user.isAdmin, schedule: schedule._id, importSchedule: user.importSchedule, importEvents: user.importEvents}, secretKey);
                                const refreshToken = { token: jwt.sign({id: user._id, isAdmin: user.isAdmin, schedule: schedule._id, importSchedule: user.importSchedule, importEvents: user.importEvents}, secretKey, { expiresIn: "2d" })};
                                tokens.create(refreshToken, (err, refresh) => {
-                                   console.log(err, user);
                                    if (err) {
                                        res.status(400).send({error: "Database Error", message: err})
                                    } else {

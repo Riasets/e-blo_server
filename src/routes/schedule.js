@@ -1,28 +1,14 @@
 const mongoose = require('mongoose');
-const schedules = mongoose.model('UserSchedule');
 const events = mongoose.model('Event');
 const jwt = require('jsonwebtoken');
 const secretKey = require('./env');
+const { header } = require('express-validator/check');
+const { getSchedule } = require('../controllers/schedule');
 
 module.exports = function (app,db) {
-    app.get('/api/schedule',(req, res) => {
-            let allEvents = [];
-            jwt.verify(req.headers.token, secretKey, (error, decoded) => {
-                if (error){
-                    res.status(400).send({error: "Wrong token", message: error});
-                } else {
-                    events.find({$or: [{owner: {$in: [decoded.schedule, decoded.importSchedule]}}, {_id: {$in: decoded.importEvents}}]})
-                        .exec((err, events) => {
-                                if (err) {
-                                    res.status(500).send({error: "Database Error", message: err});
-                                } else {
-                                    res.send({events: events, scheduleId: decoded.schedule});
-                                }
-                            }
-                        )
-                }
-            });
-    });
+    app.get('/api/schedule',
+        header('token').isString().withMessage('Empty token field'),
+        getSchedule);
     app.post('/api/event', (req, res)=>{
             let decoded = jwt.verify(req.headers.token, secretKey, (error, decoded) => {
                 if (error){
@@ -48,4 +34,4 @@ module.exports = function (app,db) {
             });
     })
 
-}
+};

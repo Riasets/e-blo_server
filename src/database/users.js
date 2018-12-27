@@ -29,7 +29,11 @@ let userSchema = new mongoose.Schema({
     friends: [String],
 });
 
+let refreshTokenSchema = new mongoose.Schema({
+    token: String,
+});
+
 mongoose.model('Event', eventSchema, 'events');
 mongoose.model('User', userSchema, 'users');
 mongoose.model('UserSchedule', scheduleUserSchema, 'schedules');
-
+mongoose.model('RefreshToken', refreshTokenSchema, 'tokens');

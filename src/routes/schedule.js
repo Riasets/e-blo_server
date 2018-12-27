@@ -1,53 +1,21 @@
 const mongoose = require('mongoose');
-const schedules = mongoose.model('UserSchedule');
 const events = mongoose.model('Event');
 const jwt = require('jsonwebtoken');
 const secretKey = require('./env');
+const { header, check } = require('express-validator/check');
+const { getSchedule, postEvent } = require('../controllers/schedule');
 
 module.exports = function (app,db) {
-    app.get('/api/schedule',(req, res) => {
-            console.log(req.headers);
-            console.log(req.headers.token);
-            let allEvents = [];
-            jwt.verify(req.headers.token, secretKey, (error, decoded) => {
-                if (error){
-                    res.status(400).send({error: "Wrong token", message: error});
-                } else {
-                    events.find({$or: [{owner: {$in: [decoded.schedule, decoded.importSchedule]}}, {_id: {$in: decoded.importEvents}}]})
-                        .exec((err, events) => {
-                                if (err) {
-                                    res.status(500).send({error: "Database Error", message: err});
-                                } else {
-                                    res.send({events: events, scheduleId: decoded.schedule});
-                                }
-                            }
-                        )
-                }
-            });
-    });
-    app.post('/api/event', (req, res)=>{
-            let decoded = jwt.verify(req.headers.token, secretKey, (error, decoded) => {
-                if (error){
-                    res.status(400).send({error: "Wrong token", message: error});
-                }
-                if (req.body.name && req.body.repeat && req.body.start && req.body.end && req.body.day && req.body.copy && req.body.isLesson){
-                    events.create({
-                        name: req.body.name,
-                        repeat: req.body.repeat,
-                        start: req.body.start,
-                        end: req.body.end,
-                        day: req.body.day,
-                        copy: req.body.copy,
-                        numberOfLesson: req.body.numberOfLesson,
-                        description: req.body.description,
-                        owner: decoded.schedule,
-                        isLesson: req.body.isLesson,
-                    });
-                    res.send({status: "OK"});
-                } else {
-                    res.status(400).send({error: "Check entered fields"});
-                }
-            });
-    })
+    app.get('/api/schedule',
+        header('token').isString().withMessage('Empty token field'),
+        getSchedule);
 
-}
+    app.post('/api/event',
+        header('token').isString().withMessage('Empty token field'),
+        check('name').isString().withMessage('Empty name field'),
+        check('repeat').isNumeric().withMessage('Empty repeat field'),
+        check('start').isNumeric().withMessage('Empty start field'),
+        check('end').isNumeric().withMessage('Empty end field'),
+        check('day').isString().withMessage('Empty day field'),
+        postEvent);
+};

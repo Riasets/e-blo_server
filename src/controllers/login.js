@@ -3,7 +3,7 @@ const users = mongoose.model('User');
 const schedules = mongoose.model('UserSchedule');
 const tokens = mongoose.model('RefreshToken');
 const jwt = require('jsonwebtoken');
-const secretKey = require('./env');
+const secretKey = require('../routes/env');
 const crypto = require('crypto');
 const { validationResult } = require('express-validator/check');
 

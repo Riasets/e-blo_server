@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const events = mongoose.model('Event');
-const jwt = require('jsonwebtoken');
-const secretKey = require('./env');
 const { header, check } = require('express-validator/check');
 const { getSchedule, postEvent } = require('../controllers/schedule');
 

@@ -29,7 +29,7 @@ module.exports.getSchedule = async function(req, res){
     } catch(error) {
         return res.status(500).send({error})
     }
-}
+};
 
 module.exports.postEvent = async function(req,res){
 
@@ -65,4 +65,4 @@ module.exports.postEvent = async function(req,res){
         return res.status(500).send({error})
     }
 
-}
+};

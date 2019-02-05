@@ -10,14 +10,13 @@ async function refreshToken(req,res){
         return res.status(400).json({ error: errors.array()[0] });
     }
 
-    function verify(){
-        return jwt.verify(req.headers.token, secretKey);
+    function verify(token, key){
+        return jwt.verify(token, key);
     }
 
 
-
    try {
-       const decode = verify();
+       const decode = verify(res.headers.token, secretKey);
        if (tokens.findOneAndDelete({token: req.headers.token})) {
           const newRefreshToken = await tokens.create({
                token: jwt.sign({
@@ -38,7 +37,6 @@ async function refreshToken(req,res){
            throw new Error('Token is not exist');
        }
    } catch (error) {
-        console.log(error)
        return res.status(401).send({error});
    }
 }

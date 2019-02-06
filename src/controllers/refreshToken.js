@@ -41,5 +41,4 @@ async function refreshToken(req,res){
    }
 }
 
-
 module.exports = refreshToken;

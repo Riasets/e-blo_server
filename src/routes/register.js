@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const users = mongoose.model('User');
-const schedules = mongoose.model('UserSchedule');
-const crypto = require('crypto');
+const mongoose      = require('mongoose');
+const users         = mongoose.model('User');
+const schedules     = mongoose.model('UserSchedule');
+const crypto        = require('crypto');
 
 module.exports = function(app, db) {
     app.post('/api/register', (req, res) => {

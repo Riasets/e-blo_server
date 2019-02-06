@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const readline = require('readline');
-const dbURI = 'mongodb://localhost/E-blo_database';
+const mongoose      = require('mongoose');
+const readline      = require('readline');
+const dbURI         = 'mongodb://localhost/E-blo_database';
 mongoose.connect(dbURI, { useNewUrlParser: true });
 
 if (process.platform === 'win32') {

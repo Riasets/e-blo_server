@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const { header, check } = require('express-validator/check');
 const { getSchedule, postEvent } = require('../controllers/schedule');
 

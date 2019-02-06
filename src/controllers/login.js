@@ -25,7 +25,11 @@ module.exports.login = async function(req, res) {
             .exec();
 
         if (!user) {
-            throw Error("User not found");
+            console.log("user")
+            throw Error( {
+                message: "User not found",
+                status: 404,
+            });
         }
 
         const schedule = schedules.findOne({
@@ -68,6 +72,7 @@ module.exports.login = async function(req, res) {
         });
 
     } catch(error){
-        return res.send({error});
+        console.log({error});
+        return res.status(error.status).json({error: error.message});
     }
 };

@@ -1,5 +1,5 @@
-const { header } = require('express-validator/check');
-const { login } = require('../controllers/login');
+const { header }    = require('express-validator/check');
+const { login }     = require('../controllers/login');
 
 module.exports = function(app, db) {
     app.get('/api/login',

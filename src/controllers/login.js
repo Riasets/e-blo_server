@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
-const users = mongoose.model('User');
-const schedules = mongoose.model('UserSchedule');
-const tokens = mongoose.model('RefreshToken');
-const jwt = require('jsonwebtoken');
-const secretKey = require('../routes/env');
-const crypto = require('crypto');
-const { validationResult } = require('express-validator/check');
+const mongoose              = require('mongoose');
+const users                 = mongoose.model('User');
+const schedules             = mongoose.model('UserSchedule');
+const tokens                = mongoose.model('RefreshToken');
+const jwt                   = require('jsonwebtoken');
+const secretKey             = require('../routes/env');
+const crypto                = require('crypto');
+const { validationResult }  = require('express-validator/check');
 
 module.exports.login = async function(req, res) {
 
@@ -25,11 +25,10 @@ module.exports.login = async function(req, res) {
             .exec();
 
         if (!user) {
-            console.log("user")
-            throw Error( {
+            throw {
                 message: "User not found",
                 status: 404,
-            });
+            };
         }
 
         const schedule = schedules.findOne({
@@ -38,7 +37,10 @@ module.exports.login = async function(req, res) {
             .exec();
 
         if (!schedule) {
-            throw Error("Schedule not found")
+            throw {
+                status: 404,
+                message: "Schedule not found",
+            }
         }
 
         const token =  jwt.sign({
@@ -72,7 +74,6 @@ module.exports.login = async function(req, res) {
         });
 
     } catch(error){
-        console.log({error});
-        return res.status(error.status).json({error: error.message});
+        return res.status(error.status ? error.status : 500).send({ error: error.message });
     }
 };

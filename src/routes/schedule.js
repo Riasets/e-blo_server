@@ -1,5 +1,5 @@
-const { header, check } = require('express-validator/check');
-const { getSchedule, postEvent } = require('../controllers/schedule');
+const { header, check }             = require('express-validator/check');
+const { getSchedule, postEvent }    = require('../controllers/schedule');
 
 module.exports = function (app,db) {
     app.get('/api/schedule',

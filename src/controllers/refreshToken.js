@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const tokens = mongoose.model('RefreshToken');
-const jwt = require('jsonwebtoken');
-const secretKey = require('../routes/env');
-const { validationResult } = require('express-validator/check');
+const mongoose              = require('mongoose');
+const tokens                = mongoose.model('RefreshToken');
+const jwt                   = require('jsonwebtoken');
+const secretKey             = require('../routes/env');
+const { validationResult }  = require('express-validator/check');
 
 async function refreshToken(req,res){
     const errors = validationResult(req);

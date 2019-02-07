@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const events = mongoose.model('Event');
-const jwt = require('jsonwebtoken');
-const secretKey = require('../routes/env');
-const { validationResult } = require('express-validator/check');
+const mongoose              = require('mongoose');
+const events                = mongoose.model('Event');
+const jwt                   = require('jsonwebtoken');
+const secretKey             = require('../routes/env');
+const { validationResult }  = require('express-validator/check');
 
 
 module.exports.getSchedule = async function(req, res){

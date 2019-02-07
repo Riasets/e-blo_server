@@ -3,7 +3,6 @@ const users                 = mongoose.model('User');
 const schedules             = mongoose.model('UserSchedule');
 const tokens                = mongoose.model('RefreshToken');
 const jwt                   = require('jsonwebtoken');
-const secretKey             = require('../routes/env');
 const crypto                = require('crypto');
 const { validationResult }  = require('express-validator/check');
 
@@ -49,7 +48,7 @@ module.exports.login = async function(req, res) {
             schedule: schedule._id,
             importSchedule: user.importSchedule,
             importEvents: user.importEvents,
-        }, secretKey);
+        }, process.env.SECRET_KEY);
 
         const refreshToken = {
             token: jwt.sign({
@@ -59,7 +58,7 @@ module.exports.login = async function(req, res) {
                 importSchedule: user.importSchedule,
                 importEvents: user.importEvents
                 },
-                secretKey,
+                process.env.SECRET_KEY,
                 { expiresIn: "2d" }
             )};
 

@@ -1,4 +1,4 @@
-<h2>E-Blocknote server</h2>
+<h2>List server</h2>
 
 Use <br>
 <b>

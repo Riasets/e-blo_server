@@ -1,7 +1,6 @@
 const mongoose              = require('mongoose');
 const events                = mongoose.model('Event');
 const jwt                   = require('jsonwebtoken');
-const secretKey             = require('../routes/env');
 const { validationResult }  = require('express-validator/check');
 
 
@@ -15,7 +14,7 @@ module.exports.getSchedule = async function(req, res){
     }
 
     try {
-        decoded = jwt.verify(req.headers.token, secretKey)
+        decoded = jwt.verify(req.headers.token, process.env.SECRET_KEY)
     } catch(error) {
         return res.status(401).send({error})
     }
@@ -39,7 +38,7 @@ module.exports.postEvent = async function(req,res){
     }
 
     function verify(){
-        return jwt.verify(req.headers.token, secretKey);
+        return jwt.verify(req.headers.token, process.env.SECRET_KEY);
     }
 
     try {

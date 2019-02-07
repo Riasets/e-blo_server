@@ -1,7 +1,6 @@
 const mongoose              = require('mongoose');
 const tokens                = mongoose.model('RefreshToken');
 const jwt                   = require('jsonwebtoken');
-const secretKey             = require('../routes/env');
 const { validationResult }  = require('express-validator/check');
 
 async function refreshToken(req,res){
@@ -16,7 +15,7 @@ async function refreshToken(req,res){
 
 
    try {
-       const decode = verify(res.headers.token, secretKey);
+       const decode = verify(res.headers.token, process.env.SECRET_KEY);
        if (tokens.findOneAndDelete({token: req.headers.token})) {
           const newRefreshToken = await tokens.create({
                token: jwt.sign({
@@ -24,13 +23,13 @@ async function refreshToken(req,res){
                        isAdmin: decode.isAdmin,
                        schedule: decode.schedule
                    },
-                   secretKey, {expiresIn: '2 days'})
+                   process.env.SECRET_KEY , {expiresIn: '2 days'})
            });
 
           const newToken = jwt.sign({
                id: decode.id,
                isAdmin: decode.isAdmin,
-               schedule: decode.schedule}, secretKey);
+               schedule: decode.schedule}, process.env.SECRET_KEY);
 
           return res.send({token: newToken, refreshToken: newRefreshToken.token})
        } else {

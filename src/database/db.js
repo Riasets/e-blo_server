@@ -48,3 +48,6 @@ process.on('SIGTERM', function() {
 });
 
 require('./models/user');
+require('./models/schedule');
+require('./models/refreshToken');
+require('./models/event');
